@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Trust Document Generator — RenewEQ</title>
+<style>
+:root{--terra:#C1603A;--terra-light:#F2E8E3;--terra-dark:#8B3E22;--charcoal:#2C2C2A;--charcoal-mid:#5F5E5A;--charcoal-light:#D3D1C7;--offwhite:#FAF8F5;--white:#FFFFFF;--border:#E2DDD6;--success:#2D7A4F;--success-bg:#EAF5EE;--radius:10px;--radius-sm:6px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:var(--offwhite);color:var(--charcoal);min-height:100vh;}
+.page-header{background:var(--charcoal);color:#fff;padding:18px 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--terra);}
+.page-header h1{font-size:20px;font-weight:700;}
+.page-header p{font-size:11px;color:var(--charcoal-light);margin-top:2px;letter-spacing:.07em;text-transform:uppercase;}
+.badge{background:var(--terra);color:#fff;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.main{max-width:1080px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start;}
+.form-panel{position:sticky;top:20px;max-height:95vh;overflow-y:auto;}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;box-shadow:0 1px 4px rgba(44,44,42,.06);}
+.card-header{background:var(--charcoal);color:#fff;padding:10px 16px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.card-header .arrow{transition:transform .2s;}
+.card-header.collapsed .arrow{transform:rotate(-90deg);}
+.card-body{padding:16px;}
+.card-body.hidden{display:none;}
+.form-group{margin-bottom:11px;}
+.form-group:last-child{margin-bottom:0;}
+label{display:block;font-size:11px;color:var(--charcoal-mid);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:4px;}
+input[type=text],input[type=date],textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:Arial,sans-serif;color:var(--charcoal);background:var(--offwhite);outline:none;transition:border-color .15s;}
+input:focus,textarea:focus{border-color:var(--terra);background:#fff;}
+textarea{min-height:60px;resize:vertical;line-height:1.5;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.doc-checks{display:flex;flex-direction:column;gap:7px;}
+.doc-check{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--offwhite);user-select:none;}
+.doc-check:hover{border-color:var(--terra);background:var(--terra-light);}
+.doc-check.on{border-color:var(--terra);background:var(--terra-light);}
+.doc-check input[type=checkbox]{accent-color:var(--terra);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+.doc-check span{font-size:13px;color:var(--charcoal);}
+.doc-check.on span{color:var(--terra-dark);font-weight:700;}
+.btn-gen{width:100%;padding:13px;background:var(--terra);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-family:Arial,sans-serif;font-weight:700;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;}
+.btn-gen:hover{background:var(--terra-dark);}
+.btn-gen:disabled{background:var(--charcoal-light);cursor:not-allowed;}
+.out-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:40px 30px;text-align:center;box-shadow:0 1px 4px rgba(44,44,42,.06);}
+.out-box h3{font-size:16px;margin-bottom:10px;color:var(--charcoal);}
+.out-box p{font-size:13px;line-height:1.7;color:var(--charcoal-mid);}
+.out-box.ready{border-color:var(--terra);background:var(--terra-light);}
+.out-box.ready h3{color:var(--terra-dark);}
+.spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.btn-dl{margin-top:18px;padding:12px 28px;background:var(--terra);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-family:Arial,sans-serif;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.btn-dl:hover{background:var(--terra-dark);}
+.error-box{background:#FEF0F0;border:1px solid #F5BBBB;border-radius:var(--radius);padding:16px 20px;color:#A32D2D;font-size:13px;line-height:1.6;}
+.field-note{font-size:11px;color:var(--charcoal-mid);margin-top:3px;font-style:italic;}
+@media(max-width:820px){.main{grid-template-columns:1fr;}.form-panel{position:static;max-height:none;}}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div>
+    <h1>RenewEQ Land Trust Generator</h1>
+    <p>Five-document closing packet</p>
+  </div>
+  <div class="badge">ClaimThisHome.com</div>
+</header>
+
+<div class="main">
+  <div class="form-panel">
+
+    <!-- TRUST DETAILS -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">&#128197; Trust Details <span class="arrow">&#9660;</span></div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Trust Date</label>
+            <input type="date" id="trustDate">
+          </div>
+          <div class="form-group">
+            <label>Sale Date (Deed)</label>
+            <input type="date" id="saleDate">
+            <div class="field-note">Date on Deed to Trustee cover</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Trust Name</label>
+          <input type="text" id="trustName" placeholder="e.g., 709 Hickory Land Trust">
+        </div>
+        <div class="form-group">
+          <label>Trustee</label>
+          <input type="text" id="trustee" placeholder="e.g., SAA Property Management LLC">
+        </div>
+        <div class="form-group">
+          <label>Trustee Address</label>
+          <input type="text" id="trusteeAddr" placeholder="e.g., 7210 Manatee Ave #1278, Bradenton, FL 34209">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Return Address Line 1</label>
+            <input type="text" id="returnAddr1" value="7210 Manatee Ave #1278">
+          </div>
+          <div class="form-group">
+            <label>Return Address Line 2</label>
+            <input type="text" id="returnAddr2" value="Bradenton, FL 34209">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENEFICIARY / DIRECTOR -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">&#128101; Beneficiary &amp; Director <span class="arrow">&#9660;</span></div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Beneficiary Name</label>
+          <input type="text" id="beneficiary" placeholder="e.g., FMW46, LLC">
+        </div>
+        <div class="form-group">
+          <label>Beneficiary Address</label>
+          <input type="text" id="beneficiaryAddr" placeholder="e.g., 7210 Manatee Ave #1278, Bradenton, FL 34209">
+        </div>
+        <div class="form-group">
+          <label>Beneficial Interest %</label>
+          <input type="text" id="benefitPct" value="100%">
+        </div>
+        <div class="form-group">
+          <label>Director (Power of Direction)</label>
+          <input type="text" id="director" placeholder="e.g., Marisa Gotsch">
+          <div class="field-note">Person who holds power of direction — signs Trust Agreement</div>
+        </div>
+        <div class="form-group">
+          <label>1st Successor Beneficiary</label>
+          <input type="text" id="successor1" placeholder="Name and address">
+        </div>
+        <div class="form-group">
+          <label>2nd Successor Beneficiary</label>
+          <input type="text" id="successor2" placeholder="Name and address">
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESSOR DIRECTORS / TRUSTEES -->
+    <div class="card">
+      <div class="card-header collapsed" onclick="toggle(this)">&#9881; Successors (Directors &amp; Trustees) <span class="arrow">&#9660;</span></div>
+      <div class="card-body hidden">
+        <div class="form-group">
+          <label>Successor Director 1</label>
+          <input type="text" id="successorDirector1" placeholder="Name and address">
+        </div>
+        <div class="form-group">
+          <label>Successor Director 2</label>
+          <input type="text" id="successorDirector2" placeholder="Name and address">
+        </div>
+        <div class="form-group">
+          <label>Default Successor Trustee 1</label>
+          <input type="text" id="defaultSuccessorTrustee1" placeholder="Name">
+        </div>
+        <div class="form-group">
+          <label>Default Successor Trustee 2</label>
+          <input type="text" id="defaultSuccessorTrustee2" placeholder="Name">
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPERTY -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">&#128205; Property Details <span class="arrow">&#9660;</span></div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Property Address</label>
+          <input type="text" id="propAddress" placeholder="e.g., 709 Hickory Lane, Bradenton, FL 34208">
+        </div>
+        <div class="form-group">
+          <label>Common Address (if different)</label>
+          <input type="text" id="commonAddr" placeholder="Leave blank to use Property Address">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>County</label>
+            <input type="text" id="county" placeholder="Manatee">
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" id="state" value="Florida">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tax Parcel / PIN</label>
+          <input type="text" id="pin" placeholder="e.g., 11272.0145/5">
+        </div>
+        <div class="form-group">
+          <label>Legal Description</label>
+          <textarea id="legalDesc" placeholder="e.g., Lot 143 River Isles Unit 2"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRANTOR -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">&#9997; Grantor (Deed) <span class="arrow">&#9660;</span></div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Grantor Name(s)</label>
+          <input type="text" id="grantor" placeholder="e.g., Darrin Gotsch and Marisa Gotsch">
+        </div>
+        <div class="form-group">
+          <label>Grantor Description</label>
+          <input type="text" id="grantorDesc" value="a married couple, no homestead involved">
+        </div>
+        <div class="form-group">
+          <label>Consideration</label>
+          <input type="text" id="consideration" value="One Dollar ($1.00) and other good and valuable consideration">
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="card">
+      <div class="card-header" onclick="toggle(this)">&#128196; Documents to Generate <span class="arrow">&#9660;</span></div>
+      <div class="card-body">
+        <div class="doc-checks">
+          <label class="doc-check on"><input type="checkbox" checked data-key="deed"><span>Special Warranty Deed</span></label>
+          <label class="doc-check on"><input type="checkbox" checked data-key="appt"><span>Appointment of Trustee</span></label>
+          <label class="doc-check on"><input type="checkbox" checked data-key="trust"><span>Trust Agreement</span></label>
+          <label class="doc-check on"><input type="checkbox" checked data-key="deedtrust"><span>Deed to Trustee</span></label>
+          <label class="doc-check on"><input type="checkbox" checked data-key="cert"><span>Certification of Living Trust</span></label>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-gen" id="btnGen" onclick="generate()">&#9654; Generate Full Packet</button>
+  </div>
+
+  <div id="outputPanel">
+    <div class="out-box" id="outBox">
+      <h3>Your documents will appear here</h3>
+      <p>Fill in the details on the left and click Generate Full Packet.<br><br>
+      All selected documents will be generated as real Word (.docx) files using your exact template language and downloaded together as a ZIP.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggle(header) {
+  header.classList.toggle('collapsed');
+  header.nextElementSibling.classList.toggle('hidden');
+}
+
+document.querySelectorAll('.doc-check input').forEach(cb => {
+  cb.addEventListener('change', () => cb.closest('.doc-check').classList.toggle('on', cb.checked));
+});
+
+function v(id){ return (document.getElementById(id)||{}).value||''; }
+
+async function generate(){
+  const selected = [...document.querySelectorAll('.doc-check input:checked')].map(cb=>cb.dataset.key);
+  if(!selected.length){ alert('Select at least one document.'); return; }
+
+  const btn = document.getElementById('btnGen');
+  const box = document.getElementById('outBox');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Building documents...';
+  box.className = 'out-box';
+  box.innerHTML = '<h3>&#9881; Building your documents...</h3><p>Generating Word files — this takes just a moment.</p>';
+
+  const propAddr = v('propAddress');
+  const payload = {
+    trustDate:               v('trustDate'),
+    saleDate:                v('saleDate'),
+    trustName:               v('trustName'),
+    trustee:                 v('trustee'),
+    trusteeAddr:             v('trusteeAddr'),
+    returnAddr1:             v('returnAddr1'),
+    returnAddr2:             v('returnAddr2'),
+    beneficiary:             v('beneficiary'),
+    beneficiaryAddr:         v('beneficiaryAddr'),
+    benefitPct:              v('benefitPct') || '100%',
+    director:                v('director'),
+    successor1:              v('successor1'),
+    successor2:              v('successor2'),
+    successorDirector1:      v('successorDirector1'),
+    successorDirector2:      v('successorDirector2'),
+    defaultSuccessorTrustee1: v('defaultSuccessorTrustee1'),
+    defaultSuccessorTrustee2: v('defaultSuccessorTrustee2'),
+    propAddress:             propAddr,
+    county:                  v('county'),
+    state:                   v('state') || 'Florida',
+    pin:                     v('pin'),
+    legalDesc:               v('legalDesc'),
+    commonAddr:              v('commonAddr') || propAddr,
+    grantor:                 v('grantor'),
+    grantorDesc:             v('grantorDesc') || 'a married couple, no homestead involved',
+    consideration:           v('consideration') || 'One Dollar ($1.00) and other good and valuable consideration',
+    docs: selected,
+  };
+
+  try {
+    const res = await fetch('/generate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+
+    if(!res.ok){
+      const err = await res.json().catch(()=>({error:'Server error'}));
+      throw new Error(err.error || 'Server error');
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const trustSlug = (payload.trustName||'LandTrust').replace(/[^a-zA-Z0-9]/g,'_');
+    const a = document.createElement('a');
+    a.href = url; a.download = trustSlug+'_Packet.zip'; a.click();
+    URL.revokeObjectURL(url);
+
+    box.className = 'out-box ready';
+    box.innerHTML = `
+      <h3>&#10003; ${selected.length} document${selected.length>1?'s':''} ready!</h3>
+      <p><strong>${payload.trustName}</strong><br>${payload.propAddress}</p>
+      <p style="margin-top:10px;">Your ZIP file is downloading now — ${selected.length} real Word (.docx) file${selected.length>1?'s':''} using your exact template language.</p>
+      <button class="btn-dl" onclick="generate()">&#8635; Generate Again</button>
+    `;
+  } catch(err) {
+    box.className = 'out-box';
+    box.innerHTML = `<div class="error-box"><strong>Error:</strong> ${err.message}</div>`;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '&#9654; Generate Full Packet';
+}
+
+document.getElementById('trustDate').valueAsDate = new Date();
+document.getElementById('saleDate').valueAsDate = new Date();
+</script>
+</body>
+</html>

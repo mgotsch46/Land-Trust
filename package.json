@@ -1,13 +1,13 @@
 {
   "name": "land-trust-generator",
-  "version": "1.0.0",
-  "description": "RenewEQ Land Trust Document Generator",
+  "version": "2.0.0",
+  "description": "RenewEQ Land Trust Document Generator — template-fill engine",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node test/verify.js"
   },
   "dependencies": {
-    "docx": "^8.5.0",
     "express": "^4.18.2",
     "jszip": "^3.10.1"
   }

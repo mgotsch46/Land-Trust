@@ -49,6 +49,12 @@ textarea{min-height:60px;resize:vertical;line-height:1.5;}
 .error-box{background:#FEF0F0;border:1px solid #F5BBBB;border-radius:var(--radius);padding:16px 20px;color:#A32D2D;font-size:13px;line-height:1.6;}
 .field-note{font-size:11px;color:var(--charcoal-mid);margin-top:3px;font-style:italic;}
 @media(max-width:820px){.main{grid-template-columns:1fr;}.form-panel{position:static;max-height:none;}}
+
+select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:Arial,sans-serif;color:var(--charcoal);background:var(--offwhite);outline:none;}
+select:focus{border-color:var(--terra);background:#fff;}
+.state-note{font-size:11.5px;line-height:1.55;padding:9px 11px;border-radius:var(--radius-sm);margin-bottom:11px;}
+.state-note.il{background:var(--success-bg);border:1px solid #B7DCC6;color:var(--success);}
+.state-note.other{background:#FFF6E6;border:1px solid #F0D9A8;color:#8A6100;}
 </style>
 </head>
 <body>
@@ -56,7 +62,7 @@ textarea{min-height:60px;resize:vertical;line-height:1.5;}
 <header class="page-header">
   <div>
     <h1>RenewEQ Land Trust Generator</h1>
-    <p>Five-document closing packet</p>
+    <p>Four-document closing packet &middot; recording-exact templates</p>
   </div>
   <div class="badge">ClaimThisHome.com</div>
 </header>
@@ -72,89 +78,51 @@ textarea{min-height:60px;resize:vertical;line-height:1.5;}
           <div class="form-group">
             <label>Trust Date</label>
             <input type="date" id="trustDate">
+            <div class="field-note">Date the trust was created</div>
           </div>
           <div class="form-group">
-            <label>Sale Date (Deed)</label>
-            <input type="date" id="saleDate">
-            <div class="field-note">Date on Deed to Trustee cover</div>
+            <label>Execution Date</label>
+            <input type="date" id="executionDate">
+            <div class="field-note">Date documents are signed</div>
           </div>
         </div>
         <div class="form-group">
           <label>Trust Name</label>
-          <input type="text" id="trustName" placeholder="e.g., 709 Hickory Land Trust">
+          <input type="text" id="trustName" placeholder="e.g., 709 Hickory">
+          <div class="field-note">Name only &mdash; the word &ldquo;Trust&rdquo; is already in the documents</div>
         </div>
         <div class="form-group">
           <label>Trustee</label>
-          <input type="text" id="trustee" placeholder="e.g., SAA Property Management LLC">
+          <input type="text" id="trustee" placeholder="e.g., SAA Property Management, LLC">
         </div>
         <div class="form-group">
           <label>Trustee Address</label>
-          <input type="text" id="trusteeAddr" placeholder="e.g., 7210 Manatee Ave #1278, Bradenton, FL 34209">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Return Address Line 1</label>
-            <input type="text" id="returnAddr1" value="7210 Manatee Ave #1278">
-          </div>
-          <div class="form-group">
-            <label>Return Address Line 2</label>
-            <input type="text" id="returnAddr2" value="Bradenton, FL 34209">
-          </div>
+          <input type="text" id="trusteeAddr" value="7210 Manatee Ave #1278, Bradenton, FL 34209">
         </div>
       </div>
     </div>
 
-    <!-- BENEFICIARY / DIRECTOR -->
+    <!-- BENEFICIARY & SIGNER -->
     <div class="card">
-      <div class="card-header" onclick="toggle(this)">&#128101; Beneficiary &amp; Director <span class="arrow">&#9660;</span></div>
+      <div class="card-header" onclick="toggle(this)">&#128101; Beneficiary &amp; Signer <span class="arrow">&#9660;</span></div>
       <div class="card-body">
         <div class="form-group">
           <label>Beneficiary Name</label>
           <input type="text" id="beneficiary" placeholder="e.g., FMW46, LLC">
         </div>
-        <div class="form-group">
-          <label>Beneficiary Address</label>
-          <input type="text" id="beneficiaryAddr" placeholder="e.g., 7210 Manatee Ave #1278, Bradenton, FL 34209">
-        </div>
-        <div class="form-group">
-          <label>Beneficial Interest %</label>
-          <input type="text" id="benefitPct" value="100%">
-        </div>
-        <div class="form-group">
-          <label>Director (Power of Direction)</label>
-          <input type="text" id="director" placeholder="e.g., Marisa Gotsch">
-          <div class="field-note">Person who holds power of direction — signs Trust Agreement</div>
-        </div>
-        <div class="form-group">
-          <label>1st Successor Beneficiary</label>
-          <input type="text" id="successor1" placeholder="Name and address">
-        </div>
-        <div class="form-group">
-          <label>2nd Successor Beneficiary</label>
-          <input type="text" id="successor2" placeholder="Name and address">
-        </div>
-      </div>
-    </div>
-
-    <!-- SUCCESSOR DIRECTORS / TRUSTEES -->
-    <div class="card">
-      <div class="card-header collapsed" onclick="toggle(this)">&#9881; Successors (Directors &amp; Trustees) <span class="arrow">&#9660;</span></div>
-      <div class="card-body hidden">
-        <div class="form-group">
-          <label>Successor Director 1</label>
-          <input type="text" id="successorDirector1" placeholder="Name and address">
-        </div>
-        <div class="form-group">
-          <label>Successor Director 2</label>
-          <input type="text" id="successorDirector2" placeholder="Name and address">
-        </div>
-        <div class="form-group">
-          <label>Default Successor Trustee 1</label>
-          <input type="text" id="defaultSuccessorTrustee1" placeholder="Name">
-        </div>
-        <div class="form-group">
-          <label>Default Successor Trustee 2</label>
-          <input type="text" id="defaultSuccessorTrustee2" placeholder="Name">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Signer Name</label>
+            <input type="text" id="signerName" placeholder="e.g., Marisa Gotsch">
+          </div>
+          <div class="form-group">
+            <label>Signer Title</label>
+            <select id="signerTitle">
+              <option>Manager</option>
+              <option>Member</option>
+              <option>Managing Member</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -165,48 +133,111 @@ textarea{min-height:60px;resize:vertical;line-height:1.5;}
       <div class="card-body">
         <div class="form-group">
           <label>Property Address</label>
-          <input type="text" id="propAddress" placeholder="e.g., 709 Hickory Lane, Bradenton, FL 34208">
-        </div>
-        <div class="form-group">
-          <label>Common Address (if different)</label>
-          <input type="text" id="commonAddr" placeholder="Leave blank to use Property Address">
+          <input type="text" id="propAddress" placeholder="e.g., 709 Hickory Lane, Chicago, IL 60601">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>County</label>
-            <input type="text" id="county" placeholder="Manatee">
+            <input type="text" id="county" placeholder="Cook">
           </div>
           <div class="form-group">
             <label>State</label>
-            <input type="text" id="state" value="Florida">
+            <select id="state" onchange="stateChanged()">
+              <option value="Illinois" selected>Illinois</option>
+              <option value="Indiana">Indiana</option>
+              <option value="Florida">Florida</option>
+              <option value="Missouri">Missouri</option>
+              <option value="Michigan">Michigan</option>
+              <option value="Ohio">Ohio</option>
+              <option value="Wisconsin">Wisconsin</option>
+            </select>
           </div>
+        </div>
+        <div id="stateNote" class="state-note il">
+          Illinois selected &mdash; all Illinois statutory citations (765 ILCS 405/407/410/430/435)
+          and the Property Tax Code exemption are retained.
         </div>
         <div class="form-group">
           <label>Tax Parcel / PIN</label>
-          <input type="text" id="pin" placeholder="e.g., 11272.0145/5">
+          <input type="text" id="pin" placeholder="e.g., 17-09-123-456-0000">
         </div>
         <div class="form-group">
           <label>Legal Description</label>
-          <textarea id="legalDesc" placeholder="e.g., Lot 143 River Isles Unit 2"></textarea>
+          <textarea id="legalDesc" placeholder="Full legal description as it appears on the prior deed"></textarea>
         </div>
       </div>
     </div>
 
-    <!-- GRANTOR -->
+    <!-- GRANTOR / DEED -->
     <div class="card">
-      <div class="card-header" onclick="toggle(this)">&#9997; Grantor (Deed) <span class="arrow">&#9660;</span></div>
+      <div class="card-header" onclick="toggle(this)">&#9997; Grantor &amp; Deed <span class="arrow">&#9660;</span></div>
       <div class="card-body">
         <div class="form-group">
           <label>Grantor Name(s)</label>
           <input type="text" id="grantor" placeholder="e.g., Darrin Gotsch and Marisa Gotsch">
         </div>
         <div class="form-group">
-          <label>Grantor Description</label>
-          <input type="text" id="grantorDesc" value="a married couple, no homestead involved">
+          <label>Grantor Capacity</label>
+          <input type="text" id="grantorCapacity" placeholder="e.g., Managing member for ABC, LLC">
+          <div class="field-note">Or: a single person &middot; a married couple</div>
         </div>
         <div class="form-group">
-          <label>Consideration</label>
-          <input type="text" id="consideration" value="One Dollar ($1.00) and other good and valuable consideration">
+          <label>Grantor Signature Line</label>
+          <input type="text" id="grantorSignature" placeholder="e.g., Marisa Gotsch, as manager to ABC, LLC">
+          <div class="field-note">Typed name printed under the signature rule</div>
+        </div>
+        <div class="form-group">
+          <label>Prior Instrument Reference</label>
+          <input type="text" id="priorInstrument" placeholder="e.g., Doc #1234567890 recorded 01/15/2024">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Exemption / Sale Date</label>
+            <input type="date" id="saleDate">
+          </div>
+          <div class="form-group">
+            <label>Seller (exemption stamp)</label>
+            <input type="text" id="seller" placeholder="Leave blank to use Grantor">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREPARER & NOTARY -->
+    <div class="card">
+      <div class="card-header collapsed" onclick="toggle(this)">&#128221; Preparer &amp; Notary <span class="arrow">&#9660;</span></div>
+      <div class="card-body hidden">
+        <div class="form-group">
+          <label>Preparer Name</label>
+          <input type="text" id="preparerName" placeholder="e.g., Marisa Gotsch">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Preparer Address</label>
+            <input type="text" id="preparerAddr" value="7210 Manatee Ave #1278">
+          </div>
+          <div class="form-group">
+            <label>Preparer City/State/Zip</label>
+            <input type="text" id="preparerCity" value="Bradenton, FL 34209">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mail Tax Bills To</label>
+          <input type="text" id="taxBillAddr" placeholder="Trust name and mailing address">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Notary State</label>
+            <input type="text" id="notaryState" placeholder="Leave blank to use property state">
+          </div>
+          <div class="form-group">
+            <label>Notary County</label>
+            <input type="text" id="notaryCounty" placeholder="Leave blank to use property county">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notary Date</label>
+          <input type="date" id="notaryDate">
         </div>
       </div>
     </div>
@@ -216,9 +247,8 @@ textarea{min-height:60px;resize:vertical;line-height:1.5;}
       <div class="card-header" onclick="toggle(this)">&#128196; Documents to Generate <span class="arrow">&#9660;</span></div>
       <div class="card-body">
         <div class="doc-checks">
-          <label class="doc-check on"><input type="checkbox" checked data-key="deed"><span>Special Warranty Deed</span></label>
-          <label class="doc-check on"><input type="checkbox" checked data-key="appt"><span>Appointment of Trustee</span></label>
           <label class="doc-check on"><input type="checkbox" checked data-key="trust"><span>Trust Agreement</span></label>
+          <label class="doc-check on"><input type="checkbox" checked data-key="appt"><span>Appointment of Trustee</span></label>
           <label class="doc-check on"><input type="checkbox" checked data-key="deedtrust"><span>Deed to Trustee</span></label>
           <label class="doc-check on"><input type="checkbox" checked data-key="cert"><span>Certification of Living Trust</span></label>
         </div>
@@ -232,7 +262,8 @@ textarea{min-height:60px;resize:vertical;line-height:1.5;}
     <div class="out-box" id="outBox">
       <h3>Your documents will appear here</h3>
       <p>Fill in the details on the left and click Generate Full Packet.<br><br>
-      All selected documents will be generated as real Word (.docx) files using your exact template language and downloaded together as a ZIP.</p>
+      Documents are produced by filling your original Word templates &mdash; page size, fonts,
+      spacing and layout are preserved byte-for-byte, so output is safe to record.</p>
     </div>
   </div>
 </div>
@@ -249,6 +280,21 @@ document.querySelectorAll('.doc-check input').forEach(cb => {
 
 function v(id){ return (document.getElementById(id)||{}).value||''; }
 
+function stateChanged(){
+  const s = v('state');
+  const note = document.getElementById('stateNote');
+  if (s === 'Illinois') {
+    note.className = 'state-note il';
+    note.innerHTML = 'Illinois selected &mdash; all Illinois statutory citations ' +
+      '(765 ILCS 405/407/410/430/435) and the Property Tax Code exemption are retained.';
+  } else {
+    note.className = 'state-note other';
+    note.innerHTML = '<strong>' + s + '</strong> selected &mdash; Illinois-specific statutory language ' +
+      'is removed and replaced with generic wording. Confirm ' + s + ' transfer-tax exemption ' +
+      'language with the county recorder before filing.';
+  }
+}
+
 async function generate(){
   const selected = [...document.querySelectorAll('.doc-check input:checked')].map(cb=>cb.dataset.key);
   if(!selected.length){ alert('Select at least one document.'); return; }
@@ -258,36 +304,35 @@ async function generate(){
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Building documents...';
   box.className = 'out-box';
-  box.innerHTML = '<h3>&#9881; Building your documents...</h3><p>Generating Word files — this takes just a moment.</p>';
+  box.innerHTML = '<h3>&#9881; Building your documents...</h3><p>Filling your Word templates.</p>';
 
-  const propAddr = v('propAddress');
   const payload = {
-    trustDate:               v('trustDate'),
-    saleDate:                v('saleDate'),
-    trustName:               v('trustName'),
-    trustee:                 v('trustee'),
-    trusteeAddr:             v('trusteeAddr'),
-    returnAddr1:             v('returnAddr1'),
-    returnAddr2:             v('returnAddr2'),
-    beneficiary:             v('beneficiary'),
-    beneficiaryAddr:         v('beneficiaryAddr'),
-    benefitPct:              v('benefitPct') || '100%',
-    director:                v('director'),
-    successor1:              v('successor1'),
-    successor2:              v('successor2'),
-    successorDirector1:      v('successorDirector1'),
-    successorDirector2:      v('successorDirector2'),
-    defaultSuccessorTrustee1: v('defaultSuccessorTrustee1'),
-    defaultSuccessorTrustee2: v('defaultSuccessorTrustee2'),
-    propAddress:             propAddr,
-    county:                  v('county'),
-    state:                   v('state') || 'Florida',
-    pin:                     v('pin'),
-    legalDesc:               v('legalDesc'),
-    commonAddr:              v('commonAddr') || propAddr,
-    grantor:                 v('grantor'),
-    grantorDesc:             v('grantorDesc') || 'a married couple, no homestead involved',
-    consideration:           v('consideration') || 'One Dollar ($1.00) and other good and valuable consideration',
+    state:            v('state') || 'Illinois',
+    trustDate:        v('trustDate'),
+    executionDate:    v('executionDate') || v('trustDate'),
+    saleDate:         v('saleDate') || v('trustDate'),
+    trustName:        v('trustName'),
+    trustee:          v('trustee'),
+    trusteeAddr:      v('trusteeAddr'),
+    beneficiary:      v('beneficiary'),
+    signerName:       v('signerName'),
+    signerTitle:      v('signerTitle'),
+    propAddress:      v('propAddress'),
+    county:           v('county'),
+    pin:              v('pin'),
+    legalDesc:        v('legalDesc'),
+    grantor:          v('grantor'),
+    grantorCapacity:  v('grantorCapacity'),
+    grantorSignature: v('grantorSignature'),
+    priorInstrument:  v('priorInstrument'),
+    seller:           v('seller'),
+    preparerName:     v('preparerName'),
+    preparerAddr:     v('preparerAddr'),
+    preparerCity:     v('preparerCity'),
+    taxBillAddr:      v('taxBillAddr'),
+    notaryState:      v('notaryState'),
+    notaryCounty:     v('notaryCounty'),
+    notaryDate:       v('notaryDate'),
     docs: selected,
   };
 
@@ -303,6 +348,7 @@ async function generate(){
       throw new Error(err.error || 'Server error');
     }
 
+    const unresolved = res.headers.get('X-Unresolved-Fields');
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const trustSlug = (payload.trustName||'LandTrust').replace(/[^a-zA-Z0-9]/g,'_');
@@ -310,16 +356,23 @@ async function generate(){
     a.href = url; a.download = trustSlug+'_Packet.zip'; a.click();
     URL.revokeObjectURL(url);
 
+    let warn = '';
+    if (unresolved && unresolved !== 'none') {
+      warn = '<div class="error-box" style="margin-top:14px;text-align:left;">' +
+             '<strong>Unfilled fields left in the document:</strong><br>' +
+             unresolved.split(',').join(', ') + '</div>';
+    }
+
     box.className = 'out-box ready';
-    box.innerHTML = `
-      <h3>&#10003; ${selected.length} document${selected.length>1?'s':''} ready!</h3>
-      <p><strong>${payload.trustName}</strong><br>${payload.propAddress}</p>
-      <p style="margin-top:10px;">Your ZIP file is downloading now — ${selected.length} real Word (.docx) file${selected.length>1?'s':''} using your exact template language.</p>
-      <button class="btn-dl" onclick="generate()">&#8635; Generate Again</button>
-    `;
+    box.innerHTML =
+      '<h3>&#10003; ' + selected.length + ' document' + (selected.length>1?'s':'') + ' ready</h3>' +
+      '<p><strong>' + payload.trustName + '</strong><br>' + payload.propAddress + '</p>' +
+      '<p style="margin-top:10px;">' + payload.state + ' packet downloading now.</p>' +
+      warn +
+      '<button class="btn-dl" onclick="generate()">&#8635; Generate Again</button>';
   } catch(err) {
     box.className = 'out-box';
-    box.innerHTML = `<div class="error-box"><strong>Error:</strong> ${err.message}</div>`;
+    box.innerHTML = '<div class="error-box"><strong>Error:</strong> ' + err.message + '</div>';
   }
 
   btn.disabled = false;
@@ -327,7 +380,10 @@ async function generate(){
 }
 
 document.getElementById('trustDate').valueAsDate = new Date();
+document.getElementById('executionDate').valueAsDate = new Date();
 document.getElementById('saleDate').valueAsDate = new Date();
+document.getElementById('notaryDate').valueAsDate = new Date();
+stateChanged();
 </script>
 </body>
 </html>

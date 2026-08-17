@@ -144,6 +144,25 @@ const textOf = async (buf, part='word/document.xml') => {
   }
   check('footer carries the date', /08\/16\/2026/.test(await textOf(taBuf, 'word/footer1.xml')));
 
+  // ---------- signature blocks ----------
+  console.log('\nSignature blocks');
+  const sigV = buildValues({ ...IL, beneficiary: 'REIL LLC', signerTitle: 'Member' });
+  const sApt  = await textOf((await buildDocument(DOCUMENTS.appt.template, sigV)).buffer);
+  const sTA   = await textOf((await buildDocument(DOCUMENTS.trust.template, sigV)).buffer);
+  const sCert = await textOf((await buildDocument(DOCUMENTS.cert.template, sigV)).buffer);
+  const sDeed = await textOf((await buildDocument(DOCUMENTS.deedtrust.template, sigV)).buffer);
+  check('appt: beneficiary named under its rule', /REIL LLC, Beneficiary/.test(sApt));
+  check('appt: trustee named under its rule', /REWY Management LLC, Trustee/.test(sApt));
+  check('appt: no unnamed "  Beneficiary" label', !/\s{2}Beneficiary(?![ ,])/.test(sApt));
+  check('TA: execution block names signer', /By: Edgardo Agrait, Member/.test(sTA));
+  check('TA: signature caption uses the real title', /Edgardo Agrait, Member/.test(sTA) && !/Managing Member/.test(sTA));
+  check('TA: schedule caption uses the real title', !/SignatureManagerDate/.test(sTA));
+  check('TA: schedule names the trustee', /REWY Management LLC, As Trustee/.test(sTA));
+  check('cert: reads "Name, Title"', /Signature of Trustee: Edgardo Agrait, Member/.test(sCert));
+  check('cert: names the trustee entity', /REWY Management LLC/.test(sCert));
+  check('deed: names signer and capacity', /Edgardo Agrait, Member of REMO SF LLC/.test(sDeed));
+  check('no hardcoded Darin Knox anywhere', ![sApt,sTA,sCert,sDeed].some(t => /Darin Knox/.test(t)));
+
   // ---------- packet ----------
   console.log('\nPacket assembly');
   const pk = await buildPacket(MO, null);

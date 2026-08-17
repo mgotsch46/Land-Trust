@@ -55,6 +55,15 @@ select:focus{border-color:var(--terra);background:#fff;}
 .state-note{font-size:11.5px;line-height:1.55;padding:9px 11px;border-radius:var(--radius-sm);margin-bottom:11px;}
 .state-note.il{background:var(--success-bg);border:1px solid #B7DCC6;color:var(--success);}
 .state-note.other{background:#FFF6E6;border:1px solid #F0D9A8;color:#8A6100;}
+
+.bulk{background:#fff;border:2px dashed var(--terra);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.bulk h4{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--terra-dark);margin-bottom:6px;}
+.bulk p{font-size:12px;color:var(--charcoal-mid);line-height:1.5;margin-bottom:10px;}
+.bulk input[type=file]{width:100%;font-size:12px;margin-bottom:10px;}
+.btn-bulk{width:100%;padding:11px;background:var(--charcoal);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;font-family:Arial,sans-serif;cursor:pointer;}
+.btn-bulk:hover{background:#000;}
+.btn-bulk:disabled{background:var(--charcoal-light);cursor:not-allowed;}
+.hint{font-size:11px;color:var(--charcoal-mid);font-style:italic;margin-top:3px;}
 </style>
 </head>
 <body>
@@ -69,6 +78,16 @@ select:focus{border-color:var(--terra);background:#fff;}
 
 <div class="main">
   <div class="form-panel">
+
+    <div class="bulk">
+      <h4>&#128202; Bulk from spreadsheet</h4>
+      <p>Upload an .xlsx with one row per trust and get back one zip per trust,
+         documents named by property address. Uses the same column headings as the
+         standard input sheet.</p>
+      <input type="file" id="bulkFile" accept=".xlsx,.xls">
+      <button class="btn-bulk" id="btnBulk" onclick="generateBulk()">Generate All Packets</button>
+      <div class="hint">Leave the fields below alone when using bulk upload.</div>
+    </div>
 
     <!-- TRUST DETAILS -->
     <div class="card">
@@ -144,6 +163,7 @@ select:focus{border-color:var(--terra);background:#fff;}
             <label>State</label>
             <select id="state" onchange="stateChanged()">
               <option value="Illinois" selected>Illinois</option>
+              <option value="Missouri">Missouri</option>
               <option value="Indiana">Indiana</option>
               <option value="Florida">Florida</option>
               <option value="Missouri">Missouri</option>
@@ -228,11 +248,11 @@ select:focus{border-color:var(--terra);background:#fff;}
         <div class="form-row">
           <div class="form-group">
             <label>Notary State</label>
-            <input type="text" id="notaryState" placeholder="Leave blank to use property state">
+            <input type="text" id="notaryState" placeholder="Leave blank for a write-on line">
           </div>
           <div class="form-group">
             <label>Notary County</label>
-            <input type="text" id="notaryCounty" placeholder="Leave blank to use property county">
+            <input type="text" id="notaryCounty" placeholder="Leave blank for a write-on line">
           </div>
         </div>
         <div class="form-group">
@@ -289,9 +309,12 @@ function stateChanged(){
       '(765 ILCS 405/407/410/430/435) and the Property Tax Code exemption are retained.';
   } else {
     note.className = 'state-note other';
+    var extra = (s === 'Missouri')
+      ? ' Missouri does not recognise the land trust form, so the wording &mdash; including the trust\'s own name &mdash; becomes <strong>Revocable Trust</strong>.'
+      : '';
     note.innerHTML = '<strong>' + s + '</strong> selected &mdash; Illinois-specific statutory language ' +
-      'is removed and replaced with generic wording. Confirm ' + s + ' transfer-tax exemption ' +
-      'language with the county recorder before filing.';
+      'is removed and replaced with generic wording.' + extra +
+      ' The transfer-tax exemption block is omitted unless a citation is configured for ' + s + '.';
   }
 }
 
@@ -377,6 +400,45 @@ async function generate(){
 
   btn.disabled = false;
   btn.innerHTML = '&#9654; Generate Full Packet';
+}
+
+async function generateBulk(){
+  const f = document.getElementById('bulkFile').files[0];
+  if(!f){ alert('Choose a spreadsheet first.'); return; }
+  const btn = document.getElementById('btnBulk');
+  const box = document.getElementById('outBox');
+  btn.disabled = true; btn.textContent = 'Building packets...';
+  box.className = 'out-box';
+  box.innerHTML = '<h3>&#9881; Building packets...</h3><p>Reading ' + f.name + '</p>';
+  try{
+    const buf = await f.arrayBuffer();
+    const res = await fetch('/generate-bulk', {
+      method:'POST', headers:{'Content-Type':'application/octet-stream'}, body: buf });
+    if(!res.ok){
+      const e = await res.json().catch(()=>({error:'Server error'}));
+      throw new Error(e.error || 'Server error');
+    }
+    const count = res.headers.get('X-Packet-Count');
+    let report = [];
+    try { report = JSON.parse(atob(res.headers.get('X-Report')||'')) || []; } catch(_){}
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'Trust_Packets.zip'; a.click();
+    URL.revokeObjectURL(url);
+    const rows = report.map(r =>
+      '<tr><td style="padding:2px 10px 2px 0;">' + r.state + '</td><td>' + r.trust.replace(/_/g,' ') +
+      (r.unresolved && r.unresolved.length ? ' <span style="color:#A32D2D;">(' + r.unresolved.join(', ') + ')</span>' : '') +
+      '</td></tr>').join('');
+    box.className = 'out-box ready';
+    box.innerHTML = '<h3>&#10003; ' + count + ' packets ready</h3>' +
+      '<p>Downloading as Trust_Packets.zip &mdash; one zip per trust.</p>' +
+      '<table style="margin:14px auto 0;font-size:12px;text-align:left;">' + rows + '</table>';
+  } catch(err){
+    box.className = 'out-box';
+    box.innerHTML = '<div class="error-box"><strong>Error:</strong> ' + err.message + '</div>';
+  }
+  btn.disabled = false; btn.textContent = 'Generate All Packets';
 }
 
 document.getElementById('trustDate').valueAsDate = new Date();

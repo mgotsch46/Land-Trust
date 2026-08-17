@@ -114,7 +114,7 @@ function buildValues(raw) {
 
   const grantor = clean(raw.grantor);
   const signer  = clean(raw.signerName);
-  const title   = clean(raw.signerTitle) || 'Managing Member';
+  const title   = clean(raw.signerTitle);   // no default — supplied per generation
   const ret1    = clean(raw.preparerName);
   const ret2    = clean(raw.preparerAddr);
   const priorRef = clean(raw.priorInstrument);

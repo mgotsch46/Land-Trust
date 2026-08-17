@@ -107,16 +107,16 @@ select:focus{border-color:var(--terra);background:#fff;}
         </div>
         <div class="form-group">
           <label>Trust Name</label>
-          <input type="text" id="trustName" placeholder="e.g., 709 Hickory">
+          <input type="text" id="trustName" placeholder="e.g., 123 Main St">
           <div class="field-note">Name only &mdash; the word &ldquo;Trust&rdquo; is already in the documents</div>
         </div>
         <div class="form-group">
           <label>Trustee</label>
-          <input type="text" id="trustee" placeholder="e.g., SAA Property Management, LLC">
+          <input type="text" id="trustee" placeholder="Trustee entity name">
         </div>
         <div class="form-group">
           <label>Trustee Address</label>
-          <input type="text" id="trusteeAddr" value="7210 Manatee Ave #1278, Bradenton, FL 34209">
+          <input type="text" id="trusteeAddr" placeholder="Street, City, State ZIP">
         </div>
       </div>
     </div>
@@ -127,12 +127,12 @@ select:focus{border-color:var(--terra);background:#fff;}
       <div class="card-body">
         <div class="form-group">
           <label>Beneficiary Name</label>
-          <input type="text" id="beneficiary" placeholder="e.g., FMW46, LLC">
+          <input type="text" id="beneficiary" placeholder="Beneficiary entity name">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Signer Name</label>
-            <input type="text" id="signerName" placeholder="e.g., Marisa Gotsch">
+            <input type="text" id="signerName" placeholder="Name of the person signing">
           </div>
           <div class="form-group">
             <label>Signer Title</label>
@@ -152,7 +152,7 @@ select:focus{border-color:var(--terra);background:#fff;}
       <div class="card-body">
         <div class="form-group">
           <label>Property Address</label>
-          <input type="text" id="propAddress" placeholder="e.g., 709 Hickory Lane, Chicago, IL 60601">
+          <input type="text" id="propAddress" placeholder="Street, City, State ZIP">
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -166,7 +166,6 @@ select:focus{border-color:var(--terra);background:#fff;}
               <option value="Missouri">Missouri</option>
               <option value="Indiana">Indiana</option>
               <option value="Florida">Florida</option>
-              <option value="Missouri">Missouri</option>
               <option value="Michigan">Michigan</option>
               <option value="Ohio">Ohio</option>
               <option value="Wisconsin">Wisconsin</option>
@@ -194,7 +193,7 @@ select:focus{border-color:var(--terra);background:#fff;}
       <div class="card-body">
         <div class="form-group">
           <label>Grantor Name(s)</label>
-          <input type="text" id="grantor" placeholder="e.g., Darrin Gotsch and Marisa Gotsch">
+          <input type="text" id="grantor" placeholder="Grantor name(s) as they appear on the deed">
         </div>
         <div class="form-group">
           <label>Grantor Capacity</label>
@@ -203,7 +202,7 @@ select:focus{border-color:var(--terra);background:#fff;}
         </div>
         <div class="form-group">
           <label>Grantor Signature Line</label>
-          <input type="text" id="grantorSignature" placeholder="e.g., Marisa Gotsch, as manager to ABC, LLC">
+          <input type="text" id="grantorSignature" placeholder="Typed name under the signature rule">
           <div class="field-note">Typed name printed under the signature rule</div>
         </div>
         <div class="form-group">
@@ -229,16 +228,16 @@ select:focus{border-color:var(--terra);background:#fff;}
       <div class="card-body hidden">
         <div class="form-group">
           <label>Preparer Name</label>
-          <input type="text" id="preparerName" placeholder="e.g., Marisa Gotsch">
+          <input type="text" id="preparerName" placeholder="Name of the person signing">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Preparer Address</label>
-            <input type="text" id="preparerAddr" value="7210 Manatee Ave #1278">
+            <input type="text" id="preparerAddr" placeholder="Street address">
           </div>
           <div class="form-group">
             <label>Preparer City/State/Zip</label>
-            <input type="text" id="preparerCity" value="Bradenton, FL 34209">
+            <input type="text" id="preparerCity" placeholder="City, State ZIP">
           </div>
         </div>
         <div class="form-group">
